@@ -2,8 +2,7 @@ import fs from 'fs';
 import { extendJson, copyTemplates } from '../../core.js';
 
 const LintingPrettierMixin = subclass =>
-  // eslint-disable-next-line no-shadow
-  class LintingPrettierMixin extends subclass {
+  class extends subclass {
     async execute() {
       super.execute();
 

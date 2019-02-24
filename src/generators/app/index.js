@@ -1,6 +1,7 @@
 import qoa from 'qoa';
 import { executeMixinGenerator } from '../../core.js';
 import LintingMixin from '../linting';
+import TestingMixin from '../testing/index.js';
 
 const AppMixin = subclass =>
   // eslint-disable-next-line no-shadow
@@ -57,11 +58,17 @@ const AppMixin = subclass =>
           query: 'What would you like to upgrade?',
           handle: 'upgrade',
           symbol: '>',
-          menu: ['Linting', 'Building'],
+          menu: ['Linting', 'Testing', 'Building'],
         },
       ]);
-      if (upgrade === 'Linting') {
-        executeMixinGenerator(LintingMixin);
+      switch (upgrade) {
+        case 'Linting':
+          executeMixinGenerator(LintingMixin);
+          break;
+        case 'Testing':
+          executeMixinGenerator(TestingMixin);
+          break;
+        default:
       }
     }
   };

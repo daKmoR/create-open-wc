@@ -5,8 +5,7 @@ import LintingPrettierMixin from '../linting-prettier/index.js';
 import LintingCommitlintMixin from '../linting-commitlint/index.js';
 
 const LintingMixin = subclass =>
-  // eslint-disable-next-line no-shadow
-  class LintingMixin extends LintingEsLint(LintingPrettierMixin(LintingCommitlintMixin(subclass))) {
+  class extends LintingEsLint(LintingPrettierMixin(LintingCommitlintMixin(subclass))) {
     async execute() {
       if (super.execute) {
         super.execute();

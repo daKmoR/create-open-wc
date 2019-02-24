@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { extendJson, copyTemplates } from '../../core.js';
 
-const LintingCommitlintMixin = subclass =>
+const TestingWallabyMixin = subclass =>
   class extends subclass {
     async execute() {
       super.execute();
@@ -15,4 +15,4 @@ const LintingCommitlintMixin = subclass =>
     }
   };
 
-export default LintingCommitlintMixin;
+export default TestingWallabyMixin;
