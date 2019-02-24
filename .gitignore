@@ -1,0 +1,22 @@
+## editors
+/.idea
+/.vscode
+
+## system files
+.DS_Store
+
+# code coverage folders
+coverage/
+
+## npm
+node_modules
+npm-debug.log
+# we prefer yarn.lock
+package-lock.json
+
+## temp folders
+/.tmp/
+
+## build output
+dist
+build-stats.json
