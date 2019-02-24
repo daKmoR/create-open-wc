@@ -1,6 +1,6 @@
 {
   "name": "create-open-wc",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Easily setup all the tools of Open Web Components.",
   "main": "./dist/create-open-wc.js",
   "scripts": {
@@ -20,6 +20,9 @@
   "bin": {
     "create-open-wc": "./dist/create-open-wc.js"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "deepmerge": "^3.2.0",
     "glob": "^7.1.3",
