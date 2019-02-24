@@ -1,18 +1,13 @@
 import { extendJson, copyTemplates } from '../../core.js';
 
 const LintingEsLintMixin = subclass => class LintingEsLintMixin extends subclass {
-  execute() {
+  async execute() {
     super.execute();
 
-    extendJson(`${process.cwd()}/package.json`, {
-      "scripts": {
-        "lint:eslint": "eslint --ext .js,.html .",
-        "format:eslint": "eslint --ext .js,.html . --fix"
-      },
-      "devDependencies": {
-        "@open-wc/eslint-config": "^0.3.0"
-      }
-    });
+    extendJson(
+      `${process.cwd()}/package.json`,
+      JSON.parse(fs.readFileSync(`${__dirname}/templates/_package.json`, 'utf-8'))
+    );
 
     copyTemplates(`${__dirname}/templates/static/**/*`);
   }

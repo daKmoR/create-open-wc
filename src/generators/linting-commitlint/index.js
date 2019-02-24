@@ -1,24 +1,16 @@
-const Generator = require('yeoman-generator');
+import { extendJson, copyTemplates } from '../../core.js';
 
-module.exports = class GeneratorLintingCommitlint extends Generator {
-  default() {
-    // extend package.json
-    this.fs.extendJSON(
-      this.destinationPath('package.json'),
-      this.fs.readJSON(this.templatePath('_package.json')),
+const LintingCommitlintMixin = subclass => class LintingCommitlintMixin extends subclass {
+  async execute() {
+    super.execute();
+
+    extendJson(
+      `${process.cwd()}/package.json`,
+      JSON.parse(fs.readFileSync(`${__dirname}/templates/_package.json`, 'utf-8'))
     );
 
-    // write everything else
-    this.fs.copyTpl(
-      this.templatePath('static/**/*'),
-      this.destinationPath(),
-      this.config.getAll(),
-      undefined,
-      { globOptions: { dot: true } },
-    );
-  }
-
-  install() {
-    this.npmInstall();
+    copyTemplates(`${__dirname}/templates/static/**/*`);
   }
 };
+
+export default LintingCommitlintMixin;

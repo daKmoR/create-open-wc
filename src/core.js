@@ -24,7 +24,8 @@ export function copyTemplates(fromGlob, toDir = process.cwd(), data = {}) {
         });
 
         // find path write to
-        const toPath = filePath.replace(path.join(fromGlob.replace(/\*/g, '')), toDir);
+        const replace = path.join(fromGlob.replace(/\*/g, ''));
+        const toPath = filePath.replace(replace, toDir + '/');
 
         // TODO: direct write for now => should be a virtual file system? (is it worth the heavy wight?)
         // maybe a message: Upgrade generators will override files - are you sure? is enough?
