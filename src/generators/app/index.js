@@ -2,6 +2,7 @@ import qoa from 'qoa';
 import { executeMixinGenerator } from '../../core.js';
 import LintingMixin from '../linting';
 import TestingMixin from '../testing/index.js';
+import BuildingMixin from '../building/index.js';
 
 const AppMixin = subclass =>
   // eslint-disable-next-line no-shadow
@@ -67,6 +68,9 @@ const AppMixin = subclass =>
           break;
         case 'Testing':
           executeMixinGenerator(TestingMixin);
+          break;
+        case 'Building':
+          executeMixinGenerator(BuildingMixin);
           break;
         default:
       }
