@@ -42,9 +42,15 @@ export function copyTemplates(fromGlob, toDir = process.cwd(), data = {}) {
   });
 }
 
-export function extendJson(filePath, data) {
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
-  const newData = deepmerge(JSON.parse(fileContent), data);
+export function extendJson(filePath, data = {}) {
+  const overwriteMerge = (destinationArray, sourceArray) => sourceArray;
+
+  let newData = data;
+  if (fs.existsSync(filePath)) {
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    newData = deepmerge(JSON.parse(fileContent), data, { arrayMerge: overwriteMerge });
+  }
+
   fs.writeFileSync(filePath, JSON.stringify(newData, null, 2));
   console.log(`Writing ${filePath}.`);
 }
