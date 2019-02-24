@@ -1,22 +1,6 @@
-import qoa from 'qoa';
-
 class Generator {
-  constructor() {
-    this.prompt = (...params) => {
-      qoa.prompt(...params);
-    }
-  }
-
-  // async prompting() {
-  //   this.promptResult = await qoa.prompt(this.prompts);
-  // }
-
-  writing() {
-    console.log('...');
-  }
-
+  // eslint-disable-next-line class-methods-use-this
   execute() {}
 }
 
 export default Generator;
-

@@ -6,7 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src --out-dir dist --copy-files --include-dotfiles",
-    "start": "npm run build && node ./dist/create-open-wc.js"
+    "start": "npm run build && node ./dist/create-open-wc.js",
+    "lint:eslint": "eslint --ext .js,.html .",
+    "format:eslint": "eslint --ext .js,.html . --fix",
+    "lint:prettier": "prettier '**/*.js' --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "format:prettier": "prettier '**/*.js' --write",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "format": "npm run format:eslint && npm run format:prettier"
   },
   "keywords": [],
   "author": "open-wc",
@@ -23,6 +29,19 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
-    "babel-plugin-transform-dynamic-import": "^2.1.0"
+    "babel-plugin-transform-dynamic-import": "^2.1.0",
+    "@open-wc/eslint-config": "^0.3.0",
+    "@open-wc/prettier-config": "^0.1.0",
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.0",
+    "husky": "^1.0.0",
+    "lint-staged": "^8.0.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   }
 }

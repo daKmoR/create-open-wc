@@ -1,74 +1,69 @@
 import qoa from 'qoa';
-import LintingEsLintMixin from '../linting-eslint';
-import { executeMixinGenerator } from '../../executeMixinGenerator';
+import { executeMixinGenerator } from '../../core.js';
+import LintingMixin from '../linting';
 
-const choices = {
-  appStarter: 'Create Open Web Components Starter App',
-  appProduction: 'Create Open Web Components Enterprise App Setup (if you feel lost use the Starter App first)',
-  wcVanilla: 'Create a vanilla web component following the Open Web Components recommendations',
-  wcUpgrade: 'Upgrade my existing web component to use the Open Web Components recommendations',
-  nothing: 'Nah, I am fine thanks! => exit',
-};
-
-const AppMixin = subclass => class AppMixin extends subclass {
-  async execute() {
-    const { rootMenu } = await qoa.prompt([
-      {
-        type: 'interactive',
-        query: 'What would you like to do today?',
-        handle: 'rootMenu',
-        symbol: '>',
-        menu: [
-          'Scaffold a new project',
-          'Upgrade an existing project',
-          'Nah, I am fine thanks! => exit',
-        ],
-      },
-    ]);
-    if (rootMenu === 'Scaffold a new project') {
-      await this._promptScaffold();
+const AppMixin = subclass =>
+  // eslint-disable-next-line no-shadow
+  class AppMixin extends subclass {
+    async execute() {
+      const { rootMenu } = await qoa.prompt([
+        {
+          type: 'interactive',
+          query: 'What would you like to do today?',
+          handle: 'rootMenu',
+          symbol: '>',
+          menu: [
+            'Scaffold a new project',
+            'Upgrade an existing project',
+            'Nah, I am fine thanks! => exit',
+          ],
+        },
+      ]);
+      if (rootMenu === 'Scaffold a new project') {
+        await this._promptScaffold();
+      }
+      if (rootMenu === 'Upgrade an existing project') {
+        await this._promptUpgrade();
+      }
     }
-    if (rootMenu === 'Upgrade an existing project') {
-      await this._promptUpgrade();
-    }
-  }
 
-  async _promptScaffold() {
-    const { scaffold } = await qoa.prompt([
-      {
-        type: 'interactive',
-        query: 'What would you like to scaffold?',
-        handle: 'scaffold',
-        symbol: '>',
-        menu: [
-          'Starter App',
-          'Enterprise App Setup (if you feel lost use the Starter App first)',
-          'Vanilla Web Component',
-          'Mono Repo for web components',
-          'Minimal playground',
-        ],
-      },
-    ]);
-  }
-
-  async _promptUpgrade() {
-    const { upgrade } = await qoa.prompt([
-      {
-        type: 'interactive',
-        query: 'What would you like to upgrade?',
-        handle: 'upgrade',
-        symbol: '>',
-        menu: [
-          'Linting',
-          'Building',
-        ],
-      },
-    ]);
-    if (upgrade === 'Linting') {
-      executeMixinGenerator(LintingEsLintMixin);
+    // eslint-disable-next-line class-methods-use-this
+    async _promptScaffold() {
+      const { scaffold } = await qoa.prompt([
+        {
+          type: 'interactive',
+          query: 'What would you like to scaffold?',
+          handle: 'scaffold',
+          symbol: '>',
+          menu: [
+            'Starter App',
+            'Enterprise App Setup (if you feel lost use the Starter App first)',
+            'Vanilla Web Component',
+            'Mono Repo for web components',
+            'Minimal playground',
+          ],
+        },
+      ]);
+      if (scaffold === 'Starter App') {
+        console.log('WIP');
+      }
     }
-    console.log(upgrade);
-  }
-}
+
+    // eslint-disable-next-line class-methods-use-this
+    async _promptUpgrade() {
+      const { upgrade } = await qoa.prompt([
+        {
+          type: 'interactive',
+          query: 'What would you like to upgrade?',
+          handle: 'upgrade',
+          symbol: '>',
+          menu: ['Linting', 'Building'],
+        },
+      ]);
+      if (upgrade === 'Linting') {
+        executeMixinGenerator(LintingMixin);
+      }
+    }
+  };
 
 export default AppMixin;
