@@ -5,7 +5,7 @@ import path from 'path';
 import glob from 'glob';
 import deepmerge from 'deepmerge';
 
-import Generator from './generator.js';
+import Generator from './Generator.js';
 
 export async function executeMixinGenerator(Mixin) {
   class Do extends Mixin(Generator) {}
@@ -14,43 +14,64 @@ export async function executeMixinGenerator(Mixin) {
   await inst.execute();
 }
 
+function processTemplate(_fileContent, data = {}) {
+  let fileContent = _fileContent;
+  // TODO: fake template for now - find a small one? really needed? worth the cost?
+  Object.keys(data).forEach(key => {
+    fileContent = fileContent.replace(new RegExp(`<%= ${key} %>`, 'g'), data[key]);
+  });
+  return fileContent;
+}
+
+function writeFileToPath(toPath, fileContent) {
+  // TODO: direct write for now => should be a virtual file system? (is it worth the heavy weight?)
+  // maybe a message: "Upgrade generators will override files - are you sure?"" is enough?
+  const toPathDir = path.dirname(toPath);
+  if (!fs.existsSync(toPathDir)) {
+    fs.mkdirSync(toPathDir, { recursive: true });
+  }
+  fs.writeFileSync(toPath, fileContent);
+  console.log(`Writing ${toPath}.`);
+}
+
+export function copyTemplate(fromPath, toPath, data) {
+  const fileContent = fs.readFileSync(fromPath, 'utf-8');
+  const processed = processTemplate(fileContent, data);
+  writeFileToPath(toPath, processed);
+}
+
 export function copyTemplates(fromGlob, toDir = process.cwd(), data = {}) {
-  glob(fromGlob, { dot: true }, (er, files) => {
-    files.forEach(filePath => {
-      if (!fs.lstatSync(filePath).isDirectory()) {
-        let fileContent = fs.readFileSync(filePath, 'utf-8');
+  return new Promise(resolve => {
+    glob(fromGlob, { dot: true }, (er, files) => {
+      files.forEach(filePath => {
+        if (!fs.lstatSync(filePath).isDirectory()) {
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
+          const processed = processTemplate(fileContent, data);
 
-        // TODO: fake template for now - find a small lit like template system
-        Object.keys(data).forEach(key => {
-          fileContent = fileContent.replace(new RegExp(`\\\${${key}}`, 'g'), data[key]);
-        });
+          // find path write to
+          const replace = path.join(fromGlob.replace(/\*/g, ''));
+          const toPath = filePath.replace(replace, `${toDir}/`);
 
-        // find path write to
-        const replace = path.join(fromGlob.replace(/\*/g, ''));
-        const toPath = filePath.replace(replace, `${toDir}/`);
-
-        // TODO: direct write for now => should be a virtual file system? (is it worth the heavy wight?)
-        // maybe a message: "Upgrade generators will override files - are you sure?"" is enough?
-        const toPathDir = path.dirname(toPath);
-        if (!fs.existsSync(toPathDir)) {
-          fs.mkdirSync(toPathDir, { recursive: true });
+          writeFileToPath(toPath, processed);
         }
-        fs.writeFileSync(toPath, fileContent);
-        console.log(`Writing ${toPath}.`);
-      }
+      });
+      resolve();
     });
   });
 }
 
-export function extendJson(filePath, data = {}) {
+export function copyTemplateJsonInto(fromPath, toPath, data = {}) {
+  const processed = processTemplate(fs.readFileSync(fromPath, 'utf-8'), data);
+  const mergeMeObj = JSON.parse(processed);
+
   const overwriteMerge = (destinationArray, sourceArray) => sourceArray;
 
-  let newData = data;
-  if (fs.existsSync(filePath)) {
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    newData = deepmerge(JSON.parse(fileContent), data, { arrayMerge: overwriteMerge });
+  let finalObj = mergeMeObj;
+  if (fs.existsSync(toPath)) {
+    const fileContent = fs.readFileSync(toPath, 'utf-8');
+    finalObj = deepmerge(JSON.parse(fileContent), finalObj, { arrayMerge: overwriteMerge });
   }
 
-  fs.writeFileSync(filePath, JSON.stringify(newData, null, 2));
-  console.log(`Writing ${filePath}.`);
+  writeFileToPath(toPath, JSON.stringify(finalObj, null, 2));
+  console.log(`Writing ${toPath}.`);
 }

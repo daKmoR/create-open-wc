@@ -1,22 +1,19 @@
-import fs from 'fs';
-import { extendJson, copyTemplates } from '../../core.js';
-
 const LintingPrettierMixin = subclass =>
   class extends subclass {
     async execute() {
-      super.execute();
+      await super.execute();
 
-      extendJson(
-        `${process.cwd()}/package.json`,
-        JSON.parse(fs.readFileSync(`${__dirname}/templates/_package.json`, 'utf-8')),
+      this.copyTemplateJsonInto(
+        `${__dirname}/templates/_package.json`,
+        this.destinationPath('package.json'),
       );
 
-      fs.copyFileSync(
+      this.copyTemplate(
         `${__dirname}/templates/_prettier.config.js`,
-        `${process.cwd()}/prettier.config.js`,
+        this.destinationPath('prettier.config.js'),
       );
 
-      copyTemplates(`${__dirname}/templates/static/**/*`);
+      await this.copyTemplates(`${__dirname}/templates/static/**/*`);
     }
   };
 

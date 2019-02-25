@@ -3,6 +3,7 @@ import { executeMixinGenerator } from '../../core.js';
 import LintingMixin from '../linting';
 import TestingMixin from '../testing/index.js';
 import BuildingMixin from '../building/index.js';
+import StarterAppMixin from '../starter-app/index.js';
 
 const AppMixin = subclass =>
   // eslint-disable-next-line no-shadow
@@ -47,7 +48,7 @@ const AppMixin = subclass =>
         },
       ]);
       if (scaffold === 'Starter App') {
-        console.log('WIP');
+        executeMixinGenerator(StarterAppMixin);
       }
     }
 

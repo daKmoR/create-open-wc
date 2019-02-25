@@ -1,17 +1,14 @@
-import fs from 'fs';
-import { extendJson, copyTemplates } from '../../core.js';
-
 const LintingCommitlintMixin = subclass =>
   class extends subclass {
     async execute() {
-      super.execute();
+      await super.execute();
 
-      extendJson(
-        `${process.cwd()}/package.json`,
-        JSON.parse(fs.readFileSync(`${__dirname}/templates/_package.json`, 'utf-8')),
+      this.copyTemplateJsonInto(
+        `${__dirname}/templates/_package.json`,
+        this.destinationPath('package.json'),
       );
 
-      copyTemplates(`${__dirname}/templates/static/**/*`);
+      await this.copyTemplates(`${__dirname}/templates/static/**/*`);
     }
   };
 
