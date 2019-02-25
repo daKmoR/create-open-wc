@@ -35,7 +35,7 @@ const AppMixin = subclass =>
       const { scaffold } = await qoa.prompt([
         {
           type: 'interactive',
-          query: 'What would you like to scaffold?',
+          query: 'What would you like to scaffold?\nNote: Content will be written in a new folder.',
           handle: 'scaffold',
           symbol: '>',
           menu: [
@@ -47,8 +47,12 @@ const AppMixin = subclass =>
           ],
         },
       ]);
-      if (scaffold === 'Starter App') {
-        executeMixinGenerator(StarterAppMixin);
+      switch (scaffold) {
+        case 'Starter App':
+          executeMixinGenerator(StarterAppMixin);
+          break;
+        default:
+          console.log('Sorry not yet implemented - visit us on https://github.com/open-wc/open-wc');
       }
     }
 
@@ -57,7 +61,8 @@ const AppMixin = subclass =>
       const { upgrade } = await qoa.prompt([
         {
           type: 'interactive',
-          query: 'What would you like to upgrade?',
+          query:
+            'What would you like to upgrade?\nNote: Files will be written to the current folder (existing files will be overwritten)',
           handle: 'upgrade',
           symbol: '>',
           menu: ['Linting', 'Testing', 'Building'],
