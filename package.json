@@ -1,6 +1,6 @@
 {
   "name": "create-open-wc",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Easily setup all the tools of Open Web Components.",
   "main": "./dist/create-open-wc.js",
   "scripts": {
