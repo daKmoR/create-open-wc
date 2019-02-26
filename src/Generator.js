@@ -1,10 +1,11 @@
 import path from 'path';
-import { copyTemplates, copyTemplate, copyTemplateJsonInto } from './core.js';
+import { copyTemplates, copyTemplate, copyTemplateJsonInto, installNpm } from './core.js';
 
 class Generator {
   constructor() {
     this._destinationPath = process.cwd();
     this.templateData = {};
+    this._installNpm = true;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -24,6 +25,12 @@ class Generator {
 
   async copyTemplates(from, to = this.destinationPath()) {
     return copyTemplates(from, to, this.templateData);
+  }
+
+  async end() {
+    if (this._installNpm) {
+      await installNpm(this._destinationPath);
+    }
   }
 }
 

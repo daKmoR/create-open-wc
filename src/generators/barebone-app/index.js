@@ -1,8 +1,5 @@
 import path from 'path';
 import qoa from 'qoa';
-import LintingMixin from '../linting/index.js';
-import BuildingMixin from '../building/index.js';
-import TestingMixin from '../testing/index.js';
 
 function getClassName(tagName) {
   return tagName
@@ -10,8 +7,8 @@ function getClassName(tagName) {
     .reduce((previous, part) => previous + part.charAt(0).toUpperCase() + part.slice(1), '');
 }
 
-const StarterAppMixin = subclass =>
-  class extends BuildingMixin(TestingMixin(LintingMixin(subclass))) {
+const BareboneAppMixin = subclass =>
+  class extends subclass {
     async execute() {
       // before super to also affect the Mixin it applies
       let tagName = '';
@@ -33,19 +30,13 @@ const StarterAppMixin = subclass =>
 
       this._destinationPath = path.join(process.cwd(), tagName);
 
-      console.log('Setup Starter App...');
+      console.log('Setup Barebone App...');
       await super.execute();
 
       // write & rename app-template
       this.copyTemplate(
         `${__dirname}/templates/_app.js`,
         this.destinationPath(`src/${tagName}.js`),
-      );
-
-      // write & rename test-template
-      this.copyTemplate(
-        `${__dirname}/templates/_test.js`,
-        this.destinationPath(`test/${tagName}.test.js`),
       );
 
       this.copyTemplateJsonInto(
@@ -68,4 +59,4 @@ const StarterAppMixin = subclass =>
     }
   };
 
-export default StarterAppMixin;
+export default BareboneAppMixin;
