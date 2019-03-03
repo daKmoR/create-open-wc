@@ -2,9 +2,11 @@ import qoa from 'qoa';
 import { executeMixinGenerator } from '../../core.js';
 import LintingMixin from '../linting';
 import TestingMixin from '../testing/index.js';
+import DemoingMixin from '../demoing/index.js';
 import BuildingMixin from '../building/index.js';
 import StarterAppMixin from '../starter-app/index.js';
 import BareboneAppMixin from '../barebone-app/index.js';
+import WcLitElementMixin from '../wc-lit-element/index.js';
 
 const AppMixin = subclass =>
   // eslint-disable-next-line no-shadow
@@ -48,7 +50,7 @@ const AppMixin = subclass =>
             'Barebone App',
             'Starter App',
             'Enterprise App (if you feel lost use the Starter App first)',
-            'Vanilla Web Component',
+            'Lit Element Web Component',
             'Mono Repo for web components',
           ],
         },
@@ -59,6 +61,9 @@ const AppMixin = subclass =>
           break;
         case 'Starter App':
           await executeMixinGenerator(StarterAppMixin);
+          break;
+        case 'Lit Element Web Component':
+          await executeMixinGenerator(WcLitElementMixin);
           break;
         default:
           console.log('Sorry not yet implemented - visit us on https://github.com/open-wc/open-wc');
@@ -74,7 +79,7 @@ const AppMixin = subclass =>
             'What would you like to upgrade?\nNote: Files will be written to the current folder (existing files will be overwritten)',
           handle: 'upgrade',
           symbol: '>',
-          menu: ['Linting', 'Testing', 'Building'],
+          menu: ['Linting', 'Testing', 'Demoing', 'Building'],
         },
       ]);
       switch (upgrade) {
@@ -83,6 +88,9 @@ const AppMixin = subclass =>
           break;
         case 'Testing':
           await executeMixinGenerator(TestingMixin);
+          break;
+        case 'Demoing':
+          await executeMixinGenerator(DemoingMixin);
           break;
         case 'Building':
           await executeMixinGenerator(BuildingMixin);

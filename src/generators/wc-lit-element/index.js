@@ -1,20 +1,27 @@
 import path from 'path';
 import { askTagInfo } from '../../helpers';
 
-const BareboneAppMixin = subclass =>
+const WcLitElementMixin = subclass =>
   class extends subclass {
     async execute() {
       // before super to also affect the Mixin it applies
       const { tagName, className } = await askTagInfo();
       this.templateData = { ...this.templateData, tagName, className };
+
       this._destinationPath = path.join(process.cwd(), tagName);
 
-      console.log('Setup Barebone App...');
+      console.log('Setup lit-element web component...');
       await super.execute();
 
-      // write & rename app-template
+      // write & rename el class template
       this.copyTemplate(
-        `${__dirname}/templates/_app.js`,
+        `${__dirname}/templates/_MyEl.js`,
+        this.destinationPath(`src/${className}.js`),
+      );
+
+      // write & rename el registration template
+      this.copyTemplate(
+        `${__dirname}/templates/_my-el.js`,
         this.destinationPath(`src/${tagName}.js`),
       );
 
@@ -38,4 +45,4 @@ const BareboneAppMixin = subclass =>
     }
   };
 
-export default BareboneAppMixin;
+export default WcLitElementMixin;
